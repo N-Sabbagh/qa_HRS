@@ -91,6 +91,26 @@ db.serialize(() => {
     FOREIGN KEY (trainer_id) REFERENCES aa_trainer(trainer_ID)
   )`);
 
+  // Create TableReservations table
+  db.run(`CREATE TABLE TableReservations (
+    reservation_id INTEGER PRIMARY KEY AUTOINCREMENT,
+    name VARCHAR(50) NOT NULL,
+    date DATE NOT NULL,
+    time TEXT NOT NULL,
+    numberOfGuests INTEGER NOT NULL,
+    contactDetails TEXT NOT NULL
+  )`);
+
+  // Create SpaBookings table
+  db.run(`CREATE TABLE SpaBookings (
+    booking_id INTEGER PRIMARY KEY AUTOINCREMENT,
+    name VARCHAR(50) NOT NULL,
+    date DATE NOT NULL,
+    time TEXT NOT NULL,
+    treatmentType VARCHAR(50) NOT NULL,
+    contactDetails TEXT NOT NULL
+  )`);
+
   // Pre-populate the aa_trainer table with sample data
   const trainers = [
     {
@@ -375,6 +395,40 @@ app.post('/api/reservations', authenticateTrainer, (req, res) => {
       }
     );
   });
+});
+
+// API endpoint for reserving a table
+app.post('/reserve-table', (req, res) => {
+  const { name, date, time, numberOfGuests, contactDetails } = req.body;
+
+  db.run(
+    `INSERT INTO TableReservations (name, date, time, numberOfGuests, contactDetails) VALUES (?, ?, ?, ?, ?)`,
+    [name, date, time, numberOfGuests, contactDetails],
+    function (err) {
+      if (err) {
+        res.status(400).send('Error saving reservation: ' + err.message);
+      } else {
+        res.status(201).send('Table reservation successful');
+      }
+    }
+  );
+});
+
+// API endpoint for booking the spa
+app.post('/book-spa', (req, res) => {
+  const { name, date, time, treatmentType, contactDetails } = req.body;
+
+  db.run(
+    `INSERT INTO SpaBookings (name, date, time, treatmentType, contactDetails) VALUES (?, ?, ?, ?, ?)`,
+    [name, date, time, treatmentType, contactDetails],
+    function (err) {
+      if (err) {
+        res.status(400).send('Error saving booking: ' + err.message);
+      } else {
+        res.status(201).send('Spa booking successful');
+      }
+    }
+  );
 });
 
 // Catch-all route to serve the frontend's index.html

@@ -24,6 +24,8 @@ import NotFound from './pages/NotFound';
 
 // Import the Reservation Pages
 import TrainerReservationPage from './pages/TrainerReservationPage';
+import TableReservationPage from './pages/TableReservationPage';
+import SpaReservationPage from './pages/SpaReservationPage';
 
 function App() {
   const [isLoggedIn, setIsLoggedIn] = useState(false);
@@ -91,8 +93,8 @@ function App() {
               />
             )}
             {/* Learners and trainers can access these routes */}
-            <Route path="/reserve-table" element={<NotFound />} />
-            <Route path="/book-spa" element={<NotFound />} />
+            <Route path="/reserve-table" element={<TableReservationPage />} />
+            <Route path="/book-spa" element={<SpaReservationPage />} />
 
             {/* Redirect non-trainers trying to access trainer routes */}
             {!isTrainer && (
@@ -189,10 +191,10 @@ function Navbar({ handleLogout, isTrainer }) {
               </Link>
             )}
             {/* These links are visible to both learners and trainers */}
-            <Link to="/404" onClick={closeMenus}>
+            <Link to="/reserve-table" onClick={closeMenus}>
               Reserve a Table
             </Link>
-            <Link to="/404" onClick={closeMenus}>
+            <Link to="/book-spa" onClick={closeMenus}>
               Book an Appointment at the Spa
             </Link>
           </div>
